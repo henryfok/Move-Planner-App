@@ -34,6 +34,39 @@ function loadData() {
 
 	$body.append(streetViewImg);
 
+	// load NYT
+	var nytKey = config.nytKey;
+	var nytURL = 'https://api.nytimes.com/svc/search/v2/articlesearch.json';
+	console.log('nytURL: ' + nytURL);
+
+	// $.ajax({
+	// 	url: nytURL,
+	// 	data: {'api-key': nytKey, 'q': "vancouver"}
+	// })
+	// .done(function(data) {
+	// 	console.log("success");
+	// 	console.log(data);
+	// })
+	// .fail(function() {
+	// 	console.log("error");
+	// })
+	// .always(function() {
+	// 	console.log("complete");
+	// });
+
+	$.getJSON(nytURL, {'api-key': nytKey, 'q': "vancouver"}, function(data) {
+			$nytElem.text('NYT Aricles About Vancouver');
+
+			var articles = data.response.docs;
+			console.log(articles);
+			for (var i=0; i<articles.length; i++) {
+				$nytElem.append('<li><a href="' + articles[i].web_url + '">' + articles[i].headline.main + '</a></li>');
+				$nytElem.append('<p>' + articles[i].snippet + '</p>');
+			}
+
+	});
+	
+
 	return false;
 };
 
