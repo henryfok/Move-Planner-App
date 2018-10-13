@@ -1,6 +1,7 @@
 function loadData() {
 
 	var $body = $('body');
+	var $wikiHeaderElem = $('#wikipedia-header');
 	var $wikiElem = $('#wikipedia-links');
 	var $nytHeaderElem = $('#nytimes-header');
 	var $nytElem = $('#nytimes-articles');
@@ -43,7 +44,6 @@ function loadData() {
 	// load NYT
 	var nytKey = config.nytKey;
 	var nytURL = 'https://api.nytimes.com/svc/search/v2/articlesearch.json';
-	console.log('nytURL: ' + nytURL);
 
 	// $.ajax({
 	// 	url: nytURL,
@@ -62,9 +62,9 @@ function loadData() {
 
 	$.getJSON(nytURL, {'api-key': nytKey, 'q': cityStr}, function(data) {
 		$nytElem.text('NYT Aricles About ' + cityStr);
-
+		console.log(data);
 		var articles = data.response.docs;
-		console.log(articles);
+		// console.log(articles);
 		for (var i=0; i<articles.length; i++) {
 			$nytElem.append('<li><a href="' + articles[i].web_url + '">' + articles[i].headline.main + '</a></li>');
 			$nytElem.append('<p>' + articles[i].snippet + '</p>');
@@ -73,6 +73,38 @@ function loadData() {
 	}).fail(function() {
 		console.log('NYT API Error!');
 		$nytHeaderElem.text('New York Times Articles about ' + cityStr + ' cannot be loaded.');
+	});
+
+	// load wiki
+	var wikiURL = 'https://en.wikipedia.org/w/api.php?action=opensearch&search=' + cityStr + '&format=json';
+
+	$.ajax({
+		url: wikiURL,
+		dataType: 'jsonp',
+		success: function(data) {
+			$wikiHeaderElem.text('Relevant Wikipedia Links About ' + cityStr);
+			console.log(data);
+			var wikiTitle = "";
+			var wikiSnippet = "";
+			var wikiLink;
+			for (var i=0; i<data[1].length; i++) {
+				
+				for (var j=1; j<data.length; j++) {
+					// console.log(data[j][i])
+					if (j == 1) {
+						wikiTitle = data[j][i];
+					}
+					if (j == 2) {
+						wikiSnippet = data[j][i];
+					}
+					if (j == 3) {
+						wikiLink = data[j][i];
+						console.log(wikiLink);
+					}
+				}
+				$wikiElem.append('<li><a href="' + wikiLink + '">' + wikiTitle + '</a></li><p>' + wikiSnippet + '</p>');
+			}
+		}
 	});
 	
 	return false;
