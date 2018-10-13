@@ -78,6 +78,10 @@ function loadData() {
 	// load wiki
 	var wikiURL = 'https://en.wikipedia.org/w/api.php?action=opensearch&search=' + cityStr + '&format=json';
 
+	var wikiRequestTimeout = setTimeout(function() {
+		$wikiElem.text('Failed to load Wikipedia content.');
+	}, 5000);	// Timeout after 5 seconds
+
 	$.ajax({
 		url: wikiURL,
 		dataType: 'jsonp',
@@ -104,6 +108,7 @@ function loadData() {
 				}
 				$wikiElem.append('<li><a href="' + wikiLink + '">' + wikiTitle + '</a></li><p>' + wikiSnippet + '</p>');
 			}
+			clearTimeout(wikiRequestTimeout);
 		}
 	});
 	
