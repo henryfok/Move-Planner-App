@@ -6,6 +6,14 @@ function loadData() {
 	var $nytElem = $('#nytimes-articles');
 	var $greeting = $('#greeting');
 
+	var streetStr = $("#street").val();
+	var cityStr = $("#city").val();
+	if (cityStr == '') {
+		console.log("User input empty!");
+		$greeting.text('Please fill in the street and city fields.')
+		return false;
+	}
+	
 	// clear out old data before new request
 	$wikiElem.text("");
 	$nytElem.text("");
@@ -15,8 +23,6 @@ function loadData() {
 	var streetViewSize = 'size=600x300';
 	var streetViewKey = '&key=' + config.streetViewKey;
 	
-	var streetStr = $("#street").val();
-	var cityStr = $("#city").val();
 	var address = streetStr + ', ' + cityStr;
 	console.log('Address: ' + address);
 
@@ -41,7 +47,7 @@ function loadData() {
 
 	// $.ajax({
 	// 	url: nytURL,
-	// 	data: {'api-key': nytKey, 'q': "vancouver"}
+	// 	data: {'api-key': nytKey, 'q': "cityStr"}
 	// })
 	// .done(function(data) {
 	// 	console.log("success");
@@ -54,19 +60,21 @@ function loadData() {
 	// 	console.log("complete");
 	// });
 
-	$.getJSON(nytURL, {'api-key': nytKey, 'q': "vancouver"}, function(data) {
-			$nytElem.text('NYT Aricles About Vancouver');
+	$.getJSON(nytURL, {'api-key': nytKey, 'q': cityStr}, function(data) {
+		$nytElem.text('NYT Aricles About ' + cityStr);
 
-			var articles = data.response.docs;
-			console.log(articles);
-			for (var i=0; i<articles.length; i++) {
-				$nytElem.append('<li><a href="' + articles[i].web_url + '">' + articles[i].headline.main + '</a></li>');
-				$nytElem.append('<p>' + articles[i].snippet + '</p>');
-			}
+		var articles = data.response.docs;
+		console.log(articles);
+		for (var i=0; i<articles.length; i++) {
+			$nytElem.append('<li><a href="' + articles[i].web_url + '">' + articles[i].headline.main + '</a></li>');
+			$nytElem.append('<p>' + articles[i].snippet + '</p>');
+		}
 
+	}).fail(function() {
+		console.log('NYT API Error!');
+		$nytHeaderElem.text('New York Times Articles about ' + cityStr + ' cannot be loaded.');
 	});
 	
-
 	return false;
 };
 
