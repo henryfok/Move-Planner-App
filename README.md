@@ -10,8 +10,6 @@
 var config = {
 	streetViewKey : 'YOUR_STREETVIEW_KEY',
 	nytKey : 'YOUR_NYT_KEY'
-	...
-	...
 }
 ```
 

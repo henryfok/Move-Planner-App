@@ -1,14 +1,18 @@
+var $body = $('body');
+var $wikiHeaderElem = $('#wikipedia-header');
+var $wikiElem = $('#wikipedia-links');
+var $nytHeaderElem = $('#nytimes-header');
+var $nytElem = $('#nytimes-articles');
+var $greeting = $('#greeting');
+
+var streetStr = '';
+var cityStr = '';
+
+$('#form-container').submit(loadData);
+
 function loadData() {
-
-	var $body = $('body');
-	var $wikiHeaderElem = $('#wikipedia-header');
-	var $wikiElem = $('#wikipedia-links');
-	var $nytHeaderElem = $('#nytimes-header');
-	var $nytElem = $('#nytimes-articles');
-	var $greeting = $('#greeting');
-
-	var streetStr = $("#street").val();
-	var cityStr = $("#city").val();
+	streetStr = $("#street").val();
+	cityStr = $("#city").val();
 	if (cityStr == '') {
 		console.log("User input empty!");
 		$greeting.text('Please fill in the street and city fields.')
@@ -19,9 +23,16 @@ function loadData() {
 	$wikiElem.text("");
 	$nytElem.text("");
 
-	// load streetview
+	loadStreetView();
+	loadNYT();
+	loadWiki();
+
+	return false;
+};
+
+function loadStreetView() {
 	var streetViewInt = 'https://maps.googleapis.com/maps/api/streetview?';
-	var streetViewSize = 'size=600x300';
+	var streetViewSize = 'size=400x400';
 	var streetViewKey = '&key=' + config.streetViewKey;
 	
 	var address = streetStr + ', ' + cityStr;
@@ -40,8 +51,9 @@ function loadData() {
 	var streetViewImg = '<img class="bgimg" src="' + streetViewURLTEST + '">';
 
 	$body.append(streetViewImg);
+}
 
-	// load NYT
+function loadNYT() {
 	var nytKey = config.nytKey;
 	var nytURL = 'https://api.nytimes.com/svc/search/v2/articlesearch.json';
 
@@ -74,13 +86,14 @@ function loadData() {
 		console.log('NYT API Error!');
 		$nytHeaderElem.text('New York Times Articles about ' + cityStr + ' cannot be loaded.');
 	});
+}
 
-	// load wiki
+function loadWiki() {
 	var wikiURL = 'https://en.wikipedia.org/w/api.php?action=opensearch&search=' + cityStr + '&format=json';
 
 	var wikiRequestTimeout = setTimeout(function() {
 		$wikiElem.text('Failed to load Wikipedia content.');
-	}, 5000);	// Timeout after 5 seconds
+	}, 3000);	// Timeout after 3 seconds
 
 	$.ajax({
 		url: wikiURL,
@@ -103,7 +116,6 @@ function loadData() {
 					}
 					if (j == 3) {
 						wikiLink = data[j][i];
-						console.log(wikiLink);
 					}
 				}
 				$wikiElem.append('<li><a href="' + wikiLink + '">' + wikiTitle + '</a></li><p>' + wikiSnippet + '</p>');
@@ -111,8 +123,4 @@ function loadData() {
 			clearTimeout(wikiRequestTimeout);
 		}
 	});
-	
-	return false;
-};
-
-$('#form-container').submit(loadData);
+}
