@@ -3,6 +3,8 @@
 
 ## Setup
 
+For security reasons, developer API keys for Google Street View and New York Times are not pushed. You will need to obtain your own keys and follow the instructions below.
+
 * Create a new .js file called config.js in the same directory as script.js
 * Add the following code to config.js, replacing with your respective API keys
 
@@ -13,9 +15,14 @@ var config = {
 }
 ```
 
-### Required API keys
+* You may want to consider adding config.js to .gitignore
+
+### APIs used
 
 | API | LINK |
 | ------ | ------ |
 | Google Street View API | https://developers.google.com/maps/documentation/streetview/ |
 | New York Times Article Search API | http://developer.nytimes.com/ |
+| MediaWiki Action API | https://www.mediawiki.org/wiki/Special:MyLanguage/API:Main_page |
+
+You do not need an API key for MediaWiki because it uses JSNOP.
