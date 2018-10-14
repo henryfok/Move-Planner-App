@@ -13,7 +13,7 @@ $('#form-container').submit(loadData);
 function loadData() {
 	streetStr = $("#street").val();
 	cityStr = $("#city").val();
-	if (cityStr == '') {
+	if (streetStr == '' || cityStr == '') {
 		console.log("User input empty!");
 		$greeting.text('Please fill in the street and city fields.')
 		return false;
@@ -32,7 +32,7 @@ function loadData() {
 
 function loadStreetView() {
 	var streetViewInt = 'https://maps.googleapis.com/maps/api/streetview?';
-	var streetViewSize = 'size=400x400';
+	var streetViewSize = 'size=640x360';
 	var streetViewKey = '&key=' + config.streetViewKey;
 	
 	var address = streetStr + ', ' + cityStr;
@@ -40,15 +40,13 @@ function loadStreetView() {
 
 	$(greeting).text('So you want to live at ' + address + '?');
 
-	var streetViewLocation = '&location=';
-	// var streetViewURL = streetViewInt + streetViewSize + streetViewLocation + address + streetViewKey;
-	// var streetViewURLEncoded = encodeURIComponent(streetViewURL);
-	// console.log('Street View URL: ' + streetViewURL);
-	// console.log('Encoded: ' + streetViewURLEncoded);
+	var streetViewLocation = '&location=' + address;
+	var streetViewURL = streetViewInt + streetViewSize + streetViewLocation + streetViewKey;
+	console.log('Street View URL: ' + streetViewURL);
 
-	var streetViewURLTEST = 'https://maps.googleapis.com/maps/api/streetview?size=400x400&location=40.720032,-73.988354&fov=90&heading=235&pitch=10' + streetViewKey;
+	// var streetViewURLTEST = 'https://maps.googleapis.com/maps/api/streetview?size=400x400&location=40.720032,-73.988354&fov=90&heading=235&pitch=10' + streetViewKey;
 	
-	var streetViewImg = '<img class="bgimg" src="' + streetViewURLTEST + '">';
+	var streetViewImg = '<img class="bgimg" src="' + streetViewURL + '">';
 
 	$body.append(streetViewImg);
 }
