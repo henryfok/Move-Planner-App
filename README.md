@@ -1,6 +1,7 @@
 # Move Planner App
 
 Simple web app that finds information about a location and displays a Google Street View of the location.
+![alt text](https://raw.githubusercontent.com/henryfok/Move-Planner-App/master/app_preview.png)
 
 ## Setup
 
