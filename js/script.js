@@ -76,7 +76,7 @@ function loadNYT() {
 		var articles = data.response.docs;
 		// console.log(articles);
 		for (var i=0; i<articles.length; i++) {
-			$nytElem.append('<li><a href="' + articles[i].web_url + '">' + articles[i].headline.main + '</a></li>');
+			$nytElem.append('<li class="article"><a href="' + articles[i].web_url + '">' + articles[i].headline.main + '</a></li>');
 			$nytElem.append('<p>' + articles[i].snippet + '</p>');
 		}
 
@@ -116,7 +116,7 @@ function loadWiki() {
 						wikiLink = data[j][i];
 					}
 				}
-				$wikiElem.append('<li><a href="' + wikiLink + '">' + wikiTitle + '</a></li><p>' + wikiSnippet + '</p>');
+				$wikiElem.append('<li class="article"><a href="' + wikiLink + '">' + wikiTitle + '</a></li><p>' + wikiSnippet + '</p>');
 			}
 			clearTimeout(wikiRequestTimeout);
 		}
