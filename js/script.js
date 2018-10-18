@@ -71,13 +71,17 @@ function loadNYT() {
 	// });
 
 	$.getJSON(nytURL, {'api-key': nytKey, 'q': cityStr}, function(data) {
-		$nytElem.text('NYT Aricles About ' + cityStr);
+		$nytHeaderElem.text('NYT Aricles About ' + cityStr);
 		console.log(data);
 		var articles = data.response.docs;
 		// console.log(articles);
 		for (var i=0; i<articles.length; i++) {
 			$nytElem.append('<li class="article"><a href="' + articles[i].web_url + '">' + articles[i].headline.main + '</a></li>');
 			$nytElem.append('<p>' + articles[i].snippet + '</p>');
+			// $nytElem.append('<div class="card"><div class="card-body">' + 
+			// 	'<h5 class="card-title"><a href="' + articles[i].web_url + '">' + articles[i].headline.main + '</a></h5>' +
+			// 	'<p class="card-text">' + articles[i].snippet + '</p>' +
+			// 	'</div></div>');
 		}
 
 	}).fail(function() {
