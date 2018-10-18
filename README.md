@@ -1,5 +1,6 @@
 # Move Planner App
----
+
+Simple web app that finds information about a location and displays a Google Street View of the location.
 
 ## Setup
 
