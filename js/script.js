@@ -8,11 +8,25 @@ var $greeting = $('#greeting');
 var streetStr = '';
 var cityStr = '';
 
+var autocomplete;
+var componentForm = {
+	street_number: 'short_name',
+	route: 'long_name',		//street name
+	locality: 'long_name',	//city
+	administrative_area_level_1: 'short_name',	//province or state
+	country: 'long_name',
+	postal_code: 'short_name'
+};
+
 $('#form-container').submit(loadData);
+$('#autocomplete').on('focus', function() {
+	geoLocate();
+	initAutocomplete();
+});
 
 function loadData() {
-	streetStr = $("#street").val();
-	cityStr = $("#city").val();
+	// streetStr = $("#street").val();
+	// cityStr = $("#city").val();
 	if (streetStr == '' || cityStr == '') {
 		console.log("User input empty!");
 		$greeting.text('Please fill in the street and city fields.')
@@ -30,6 +44,64 @@ function loadData() {
 	return false;
 };
 
+function initAutocomplete() {
+	// Create the autocomplete object, restricting the search to geographical location types.
+	autocomplete = new google.maps.places.Autocomplete(
+		(document.getElementById('autocomplete')),
+		{types: ['geocode']}
+	);
+
+	// When the user selects an address from the dropdown, populate the address fields in the form.
+	autocomplete.addListener('place_changed', fillInAddress);
+}
+
+function fillInAddress() {
+	streetStr = '';
+	cityStr = '';
+	// Get the place details from the autocomplete object.
+	var place = autocomplete.getPlace();
+	// console.log('Formatted Address: ' + place.formatted_address);
+	for (var i = 0; i < place.address_components.length; i++) {
+		var addressType = place.address_components[i].types[0];
+		if (componentForm[addressType]) {
+			var val = place.address_components[i][componentForm[addressType]];
+		}
+		if (addressType == 'street_number') {
+			streetStr += (val + ' ');
+			// console.log('Street String: ' + streetStr);
+		}
+		if (addressType == 'route') {
+			streetStr += (val + ' ');
+			// console.log('Street String: ' + streetStr);
+		}
+		if (addressType == 'locality') {
+			cityStr += (val + ' ');
+			// console.log('City String: ' + cityStr);
+		}
+		if (addressType == 'administrative_area_level_1') {
+			cityStr += (val + ' ');
+			// console.log('City String: ' + cityStr);
+		}
+	}
+	loadData();
+}
+
+function geoLocate() {
+	if (navigator.geolocation) {
+		navigator.geolocation.getCurrentPosition(function(position) {
+			var geolocation = {
+				lat: position.coords.latitude,
+				lng: position.coords.longitude
+			};
+			var circle = new google.maps.Circle({
+				center: geolocation,
+				radius: position.coords.accuracy
+			});
+			autocomplete.setBounds(circle.getBounds());
+		});
+	}
+}
+
 function loadStreetView() {
 	var streetViewInt = 'https://maps.googleapis.com/maps/api/streetview?';
 	var streetViewSize = 'size=640x360';
@@ -42,7 +114,7 @@ function loadStreetView() {
 
 	var streetViewLocation = '&location=' + address;
 	var streetViewURL = streetViewInt + streetViewSize + streetViewLocation + streetViewKey;
-	console.log('Street View URL: ' + streetViewURL);
+	// console.log('Street View URL: ' + streetViewURL);
 
 	// var streetViewURLTEST = 'https://maps.googleapis.com/maps/api/streetview?size=400x400&location=40.720032,-73.988354&fov=90&heading=235&pitch=10' + streetViewKey;
 	
@@ -100,8 +172,10 @@ function loadNYT() {
 		}
 
 	}).fail(function() {
-		console.log('NYT API Error!');
+		console.log('NYT API Error! Retrying...');
 		$nytHeaderElem.text('New York Times Articles about ' + cityStr + ' cannot be loaded.');
+		$.ajax(this);
+
 	});
 }
 
