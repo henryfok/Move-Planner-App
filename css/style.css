@@ -13,6 +13,10 @@ body {background-color: #605F5E;}
 	background-color: #1D3461;
 }
 
+#autocomplete {
+	width: 500px;
+}
+
 /*.form-container {
 	padding: 20px 10px;
 	background-color: rgba(255,255,255,0.7);
@@ -25,9 +29,9 @@ body {background-color: #605F5E;}
 	background-color: #23CE6B;
 }
 
-hr {
+/*hr {
 	margin: 0px;
-}
+}*/
 
 .wikipedia-container {
 	padding:10px;

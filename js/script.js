@@ -8,6 +8,7 @@ var $greeting = $('#greeting');
 var streetStr = '';
 var cityStr = '';
 
+var geoLocated = false;
 var autocomplete;
 var componentForm = {
 	street_number: 'short_name',
@@ -20,8 +21,11 @@ var componentForm = {
 
 $('#form-container').submit(loadData);
 $('#autocomplete').on('focus', function() {
-	geoLocate();
-	initAutocomplete();
+	if (!geoLocated) {
+		geoLocate();
+		initAutocomplete();
+		geoLocated = true;
+	}
 });
 
 function loadData() {
