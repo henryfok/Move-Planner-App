@@ -1,4 +1,4 @@
-body {background-color: #CCC;}
+body {background-color: #605F5E;}
 
 .bgimg {
 	position:fixed;
@@ -19,10 +19,10 @@ body {background-color: #CCC;}
 }*/
 
 .greeting {
-	color:black;
+	color: #1D3461;
 	text-align: center;
 	padding: 10px 0px;
-	background-color: rgba(255,255,255,0.7);
+	background-color: #23CE6B;
 }
 
 hr {
@@ -46,8 +46,12 @@ hr {
 }
 
 .article {
-	border-top: 1px solid #CCC;
+	border-top: 1px solid #1D3461;
 }
 .article:first-child {
 	border-top:none;
+}
+
+.nytImage {
+	padding-bottom: 10px
 }

@@ -75,9 +75,24 @@ function loadNYT() {
 		console.log(data);
 		var articles = data.response.docs;
 		// console.log(articles);
+		var nytImageURL = '';
 		for (var i=0; i<articles.length; i++) {
-			$nytElem.append('<li class="article"><a href="' + articles[i].web_url + '">' + articles[i].headline.main + '</a></li>');
-			$nytElem.append('<p>' + articles[i].snippet + '</p>');
+			$nytElem.append('<li class="article"><a href="' + articles[i].web_url + '" target="_blank">' + 
+				articles[i].headline.main + '</a></li>' +
+				'<p>' + articles[i].snippet + '</p>');
+				// articles[i].snippet);
+			
+			if (articles[i].multimedia.length > 0) {
+				nytImageURL = articles[i].multimedia[0].url
+				for(var j=0; j<articles[i].multimedia.length; j++) {
+					if (articles[i].multimedia[j].subType == 'xlarge') {
+						nytImageURL = articles[i].multimedia[j].url;
+					}
+				}
+				$nytElem.append('<img class="nytImage" src="' + 'https://static01.nyt.com/' + nytImageURL + '">');
+			}
+			
+			// https://static01.nyt.com/images/2018/05/30/world/31CANADA-01/merlin_137976807_dcfeb0af-0103-41d0-a41e-fc9e101cb4a0-articleLarge.jpg
 			// $nytElem.append('<div class="card"><div class="card-body">' + 
 			// 	'<h5 class="card-title"><a href="' + articles[i].web_url + '">' + articles[i].headline.main + '</a></h5>' +
 			// 	'<p class="card-text">' + articles[i].snippet + '</p>' +
@@ -120,7 +135,7 @@ function loadWiki() {
 						wikiLink = data[j][i];
 					}
 				}
-				$wikiElem.append('<li class="article"><a href="' + wikiLink + '">' + wikiTitle + '</a></li><p>' + wikiSnippet + '</p>');
+				$wikiElem.append('<li class="article"><a href="' + wikiLink + '" target="_blank">' + wikiTitle + '</a></li><p>' + wikiSnippet + '</p>');
 			}
 			clearTimeout(wikiRequestTimeout);
 		}
