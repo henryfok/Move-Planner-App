@@ -38,6 +38,15 @@ body {background-color: #605F5E;}
 	background-color: rgba(255,255,255,0.7);
 }
 
+.col.map {
+	padding-bottom: 10px;
+}
+
+#map {
+	height: 0%;
+	width: 100;
+}
+
 .nytimes-container {
 	padding: 10px;
 	background-color: rgba(255,255,255,0.7);
