@@ -51,6 +51,7 @@ function loadData() {
 	loadWiki();
 	// loadTweets();
 
+	$('#content-toggle').css('visibility', 'visible');
 	return false;
 };
 

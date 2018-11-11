@@ -27,18 +27,14 @@
 
 	<h2 id="greeting" class="greeting">Where do you want to live?</h2>
 
-	<div class="container">
+	<div id="content" class="container collapse show">
 		<div class="row">
 			<div class="col map">
 				<div id="map"></div>
 			</div>
-			
 		</div>
 
 		<div class="row">
-			
-			
-
 			<div class="col">
 				<div class="nytimes-container">
 					<h3 id="nytimes-header">New York Times Articles</h3>
@@ -52,11 +48,10 @@
 					<ul id="wikipedia-links" class="article-list">Relevant Wikipedia articles about your new city here!</ul>
 				</div>
 			</div>
-
 		</div>
 	</div>
 
-
+	<button type="button" id="content-toggle" class="btn btn-primary" data-toggle="collapse" data-target="#content">Toggle Content</button>
 
 	<script src="js/libs/jquery.min.js"></script>
 	<script src='js/config.js'></script>

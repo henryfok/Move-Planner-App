@@ -68,3 +68,10 @@ body {background-color: #605F5E;}
 .nytImage {
 	padding-bottom: 10px
 }
+
+#content-toggle {
+	position: fixed;
+	bottom: 20px;
+	right: 20px;
+	visibility: hidden;
+}
