@@ -9,7 +9,7 @@ var streetStr = '';
 var cityStr = '';
 
 var map;
-var geocoder;
+var geocoder = new google.maps.Geocoder;
 
 var geoLocated = false;
 var autocomplete;
@@ -49,6 +49,7 @@ function loadData() {
 	loadMap();
 	geocodeAddress(geocoder, map);
 	loadWiki();
+	// loadTweets();
 
 	return false;
 };
@@ -107,8 +108,59 @@ function geoLocate() {
 				radius: position.coords.accuracy
 			});
 			autocomplete.setBounds(circle.getBounds());
+			geocodeLatLng(geocoder, geolocation);
 		});
 	}
+}
+
+function geocodeAddress(geocoder, resultsMap) {
+	var address = streetStr + ', ' + cityStr;
+	geocoder.geocode({'address': address}, function(results, status) {
+	if (status === 'OK') {
+		resultsMap.setCenter(results[0].geometry.location);
+		var marker = new google.maps.Marker({
+		map: resultsMap,
+		position: results[0].geometry.location
+	});
+	} else {
+		alert('Geocode was not successful for the following reason: ' + status);
+	}
+	});
+}
+
+function geocodeLatLng(geocoder, latlng) {
+	geocoder.geocode({'location' : latlng}, function(result, status) {
+		if (status == 'OK') {
+			if (result.length > 0) {
+				console.log(result);
+
+				// TODO: duplicate code, convert to a function
+				for (var i = 0; i < result[0].address_components.length; i++) {
+					var addressType = result[0].address_components[i].types[0];
+					if (componentForm[addressType]) {
+						var val = result[0].address_components[i][componentForm[addressType]];
+					}
+					if (addressType == 'street_number') {
+						streetStr += (val + ' ');
+						// console.log('Street String: ' + streetStr);
+					}
+					if (addressType == 'route') {
+						streetStr += (val + ' ');
+						// console.log('Street String: ' + streetStr);
+					}
+					if (addressType == 'locality') {
+						cityStr += (val + ' ');
+						// console.log('City String: ' + cityStr);
+					}
+					if (addressType == 'administrative_area_level_1') {
+						cityStr += (val + ' ');
+						// console.log('City String: ' + cityStr);
+					}
+				}
+				loadData();
+			}
+		}
+	})
 }
 
 function loadStreetView() {
@@ -138,22 +190,7 @@ function loadMap() {
 		center: {lat: -34.397, lng: 150.644},
 		zoom: 14
 	});
-	geocoder = new google.maps.Geocoder();
-}
-
-function geocodeAddress(geocoder, resultsMap) {
-	var address = streetStr + ', ' + cityStr;
-	geocoder.geocode({'address': address}, function(results, status) {
-	if (status === 'OK') {
-		resultsMap.setCenter(results[0].geometry.location);
-		var marker = new google.maps.Marker({
-		map: resultsMap,
-		position: results[0].geometry.location
-	});
-	} else {
-		alert('Geocode was not successful for the following reason: ' + status);
-	}
-	});
+	// geocoder = new google.maps.Geocoder();
 }
 
 function loadNYT() {
@@ -248,3 +285,25 @@ function loadWiki() {
 		}
 	});
 }
+
+// function loadTweets() {
+// 	var twitterURL = 'https://api.twitter.com/1.1/search/tweets.json?q=' + cityStr;
+// 	$.ajax({
+// 		url: twitterURL,
+// 		dataType: "json",
+// 		data: {
+// 			oauth_consumer_key: '',
+// 			oauth_signature: ''
+// 		},
+// 	})
+// 	.done(function() {
+// 		console.log("success");
+// 	})
+// 	.fail(function() {
+// 		console.log("error");
+// 	})
+// 	.always(function() {
+// 		console.log("complete");
+// 	});
+	
+// }
