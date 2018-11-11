@@ -71,28 +71,7 @@ function fillInAddress() {
 	// Get the place details from the autocomplete object.
 	var place = autocomplete.getPlace();
 	// console.log('Formatted Address: ' + place.formatted_address);
-	for (var i = 0; i < place.address_components.length; i++) {
-		var addressType = place.address_components[i].types[0];
-		if (componentForm[addressType]) {
-			var val = place.address_components[i][componentForm[addressType]];
-		}
-		if (addressType == 'street_number') {
-			streetStr += (val + ' ');
-			// console.log('Street String: ' + streetStr);
-		}
-		if (addressType == 'route') {
-			streetStr += (val + ' ');
-			// console.log('Street String: ' + streetStr);
-		}
-		if (addressType == 'locality') {
-			cityStr += (val + ' ');
-			// console.log('City String: ' + cityStr);
-		}
-		if (addressType == 'administrative_area_level_1') {
-			cityStr += (val + ' ');
-			// console.log('City String: ' + cityStr);
-		}
-	}
+	parseGoogleAddress(place);
 	loadData();
 }
 
@@ -116,15 +95,15 @@ function geoLocate() {
 function geocodeAddress(geocoder, resultsMap) {
 	var address = streetStr + ', ' + cityStr;
 	geocoder.geocode({'address': address}, function(results, status) {
-	if (status === 'OK') {
-		resultsMap.setCenter(results[0].geometry.location);
-		var marker = new google.maps.Marker({
-		map: resultsMap,
-		position: results[0].geometry.location
-	});
-	} else {
-		alert('Geocode was not successful for the following reason: ' + status);
-	}
+		if (status === 'OK') {
+			resultsMap.setCenter(results[0].geometry.location);
+			var marker = new google.maps.Marker({
+				map: resultsMap,
+				position: results[0].geometry.location
+			});
+		} else {
+			alert('Geocode was not successful for the following reason: ' + status);
+		}
 	});
 }
 
@@ -133,34 +112,38 @@ function geocodeLatLng(geocoder, latlng) {
 		if (status == 'OK') {
 			if (result.length > 0) {
 				console.log(result);
-
-				// TODO: duplicate code, convert to a function
-				for (var i = 0; i < result[0].address_components.length; i++) {
-					var addressType = result[0].address_components[i].types[0];
-					if (componentForm[addressType]) {
-						var val = result[0].address_components[i][componentForm[addressType]];
-					}
-					if (addressType == 'street_number') {
-						streetStr += (val + ' ');
-						// console.log('Street String: ' + streetStr);
-					}
-					if (addressType == 'route') {
-						streetStr += (val + ' ');
-						// console.log('Street String: ' + streetStr);
-					}
-					if (addressType == 'locality') {
-						cityStr += (val + ' ');
-						// console.log('City String: ' + cityStr);
-					}
-					if (addressType == 'administrative_area_level_1') {
-						cityStr += (val + ' ');
-						// console.log('City String: ' + cityStr);
-					}
-				}
+				parseGoogleAddress(result[0]);
 				loadData();
 			}
+		} else {
+			alert('Geocode was not successful for the following reason: ' + status);
 		}
-	})
+	});
+}
+
+function parseGoogleAddress(address) {
+	for (var i = 0; i < address.address_components.length; i++) {
+		var addressType = address.address_components[i].types[0];
+		if (componentForm[addressType]) {
+			var val = address.address_components[i][componentForm[addressType]];
+		}
+		if (addressType == 'street_number') {
+			streetStr += (val + ' ');
+			// console.log('Street String: ' + streetStr);
+		}
+		if (addressType == 'route') {
+			streetStr += (val + ' ');
+			// console.log('Street String: ' + streetStr);
+		}
+		if (addressType == 'locality') {
+			cityStr += (val + ' ');
+			// console.log('City String: ' + cityStr);
+		}
+		if (addressType == 'administrative_area_level_1') {
+			cityStr += (val + ' ');
+			// console.log('City String: ' + cityStr);
+		}
+	}
 }
 
 function loadStreetView() {
