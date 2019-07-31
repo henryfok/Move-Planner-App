@@ -27,4 +27,4 @@ var config = {
 | New York Times Article Search API | http://developer.nytimes.com/ |
 | MediaWiki Action API | https://www.mediawiki.org/wiki/Special:MyLanguage/API:Main_page |
 
-You do not need an API key for MediaWiki because it uses JSNOP.
+You do not need an API key for MediaWiki because it uses JSONP.
